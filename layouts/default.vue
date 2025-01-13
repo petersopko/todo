@@ -1,5 +1,7 @@
 <template>
-  <div class="min-h-[100dvh] bg-[#F5F5F5] pb-[env(safe-area-inset-bottom)]">
+  <div
+    class="flex min-h-[100dvh] flex-col overflow-hidden bg-[#F5F5F5] pb-[env(safe-area-inset-bottom)]"
+  >
     <div class="lg:hidden">
       <MobileNavbar />
     </div>
@@ -13,7 +15,9 @@
     </div>
 
     <!-- Mobile Content Area -->
-    <div class="px-4 pt-[84px] lg:hidden">
+    <div
+      class="flex-1 overflow-auto px-4 pt-[calc(84px+env(safe-area-inset-top))] lg:hidden"
+    >
       <slot />
     </div>
     <Toast />

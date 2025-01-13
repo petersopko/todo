@@ -1,7 +1,7 @@
 <template>
   <div>
     <div
-      class="fixed left-0 right-0 top-0 z-40 m-6 flex h-[72px] items-center justify-between bg-white p-6 transition-all duration-200"
+      class="fixed left-0 right-0 top-0 z-40 m-6 mt-[calc(6px+env(safe-area-inset-top))] flex h-[72px] items-center justify-between bg-white p-6 transition-all duration-200"
       :class="{
         'rounded-t-lg': isMenuOpen,
         'rounded-lg shadow': !isMenuOpen,
@@ -28,16 +28,17 @@
     >
       <div
         v-if="isMenuOpen"
-        class="fixed inset-0 z-30 bg-black/50"
+        class="fixed inset-0 z-30 bg-black/50 pt-[env(safe-area-inset-top)]"
         @click="isMenuOpen = false"
       >
         <div
-          class="fixed left-0 right-0 top-[72px] m-6 origin-top overflow-auto rounded-b-lg bg-white shadow-lg"
+          class="fixed left-0 right-0 top-[calc(72px+env(safe-area-inset-top))] m-6 origin-top overflow-auto rounded-b-lg bg-white shadow-lg"
           @click.stop
         >
-          <div class="flex h-[calc(100vh-132px)] flex-col px-6 py-10">
-            <NavigationContent :on-navigate="() => (isMenuOpen = false)">
-            </NavigationContent>
+          <div
+            class="flex h-[calc(100vh-132px-env(safe-area-inset-top))] flex-col px-6 py-10"
+          >
+            <NavigationContent :on-navigate="() => (isMenuOpen = false)" />
           </div>
         </div>
       </div>

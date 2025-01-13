@@ -19,16 +19,6 @@ const apiState: ApiState = {
 
 export const getApiState = () => apiState;
 
-const startRequest = () => {
-  apiState.activeRequests++;
-  apiState.loading = true;
-};
-
-const endRequest = () => {
-  apiState.activeRequests--;
-  apiState.loading = apiState.activeRequests > 0;
-};
-
 export const createApiError = (
   statusCode: number,
   message: string,
@@ -77,8 +67,6 @@ export const callApi = async <T>(
     });
   }
 
-  startRequest();
-
   try {
     const response = await fetch(url, {
       method,
@@ -102,7 +90,5 @@ export const callApi = async <T>(
     return data as T;
   } catch (error) {
     throw handleApiError(error);
-  } finally {
-    endRequest();
   }
 };
