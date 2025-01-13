@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-[#F5F5F5]">
+  <div class="min-h-[100dvh] bg-[#F5F5F5] pb-[env(safe-area-inset-bottom)]">
     <div class="lg:hidden">
       <MobileNavbar />
     </div>
