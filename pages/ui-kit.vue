@@ -1,5 +1,7 @@
 <template>
-  <div class="p-4 lg:p-6">
+  <div
+    class="h-full px-4 pt-12 lg:h-[calc(100vh-48px)] lg:overflow-hidden lg:px-10"
+  >
     <h1 class="heading-uikit mb-8 break-words">UI Components</h1>
 
     <div class="flex max-w-[1440px] flex-wrap justify-between gap-y-20">
@@ -78,7 +80,10 @@
           <div v-for="color in colors" :key="color.name">
             <ColorBox
               :color="color.name"
-              :class="{ 'border border-[#D9D9D9]': color.name === 'white' }"
+              :class="{
+                'border border-[#D9D9D9]':
+                  color.name === 'white' || color.name === 'light-gray-1',
+              }"
             />
             <div class="mt-0.5 flex flex-col lg:mt-2">
               <span

@@ -14,42 +14,68 @@ export const useTodosStore = defineStore("todos", () => {
   const toastStore = useToastStore();
   const hasInitialized = ref(false);
   const isInitializing = ref(false);
+  const { t } = useI18n();
 
-  const getTodoById = (id: string) => {
-    return items.value?.find((todo) => todo.id === id);
-  };
-
-  const getTodosByCategory = (categoryId: string) => {
-    return (
-      items.value?.filter((todo) => todo.category?.id === categoryId) ?? []
+  const getTranslatedCategoryName = (
+    categoryId: string,
+    fallbackName: string,
+  ) => {
+    const translatedCategory = categoriesStore.translatedCategories.find(
+      (c) => c.id === categoryId,
     );
+    return translatedCategory?.name || fallbackName;
   };
 
-  const getCompletedTodosByCategory = (categoryId: string) => {
-    return (
-      items.value?.filter(
-        (todo) => todo.category?.id === categoryId && todo.is_completed,
-      ) ?? []
-    );
+  const translatedTodos = computed(() =>
+    items.value.map((todo) => ({
+      ...todo,
+      category: {
+        ...todo.category,
+        name: todo.category?.id
+          ? getTranslatedCategoryName(todo.category.id, todo.category.name)
+          : todo.category?.name || "",
+      },
+    })),
+  );
+
+  const filterTodos = (
+    todos: Todo[],
+    {
+      categoryId,
+      completed,
+    }: { categoryId?: string; completed?: boolean } = {},
+  ) => {
+    return todos.filter((todo) => {
+      if (categoryId !== undefined && todo.category?.id !== categoryId)
+        return false;
+      if (completed !== undefined && todo.is_completed !== completed)
+        return false;
+      return true;
+    });
   };
 
-  const getUncompletedTodosByCategory = (categoryId: string) => {
-    return (
-      items.value?.filter(
-        (todo) => todo.category?.id === categoryId && !todo.is_completed,
-      ) ?? []
-    );
-  };
+  // Computed getters using the filter function
+  const getTodoById = (id: string) =>
+    translatedTodos.value.find((todo) => todo.id === id);
 
-  const completedTodos = computed(
-    () => items.value?.filter((todo) => todo.is_completed) ?? [],
+  const getTodosByCategory = (categoryId: string) =>
+    filterTodos(translatedTodos.value, { categoryId });
+
+  const getCompletedTodosByCategory = (categoryId: string) =>
+    filterTodos(translatedTodos.value, { categoryId, completed: true });
+
+  const getUncompletedTodosByCategory = (categoryId: string) =>
+    filterTodos(translatedTodos.value, { categoryId, completed: false });
+
+  const completedTodos = computed(() =>
+    filterTodos(translatedTodos.value, { completed: true }),
+  );
+
+  const uncompletedTodos = computed(() =>
+    filterTodos(translatedTodos.value, { completed: false }),
   );
 
   const recentCompletedTodos = computed(() => completedTodos.value.slice(0, 3));
-
-  const uncompletedTodos = computed(
-    () => items.value?.filter((todo) => !todo.is_completed) ?? [],
-  );
 
   const resetState = () => {
     items.value = [];
@@ -97,14 +123,22 @@ export const useTodosStore = defineStore("todos", () => {
         throw new Error("Invalid response format from API");
       }
 
-      items.value = response.data.map((todo) => ({
-        ...todo,
-        category: todo.category || { id: "", name: "", color: "", todos: [] },
-        is_completed: !!todo.is_completed,
-        date_created: todo.date_created || new Date().toISOString(),
-        date_updated:
-          todo.date_updated || todo.date_created || new Date().toISOString(),
-      }));
+      items.value = response.data.map((todo) => {
+        const category = todo.category || {
+          id: "",
+          name: "",
+          color: "",
+          todos: [],
+        };
+        return {
+          ...todo,
+          category,
+          is_completed: !!todo.is_completed,
+          date_created: todo.date_created || new Date().toISOString(),
+          date_updated:
+            todo.date_updated || todo.date_created || new Date().toISOString(),
+        };
+      });
 
       hasInitialized.value = true;
 
@@ -114,7 +148,7 @@ export const useTodosStore = defineStore("todos", () => {
     } catch (e) {
       items.value = [];
       hasInitialized.value = false;
-      throw handleError(e, "Failed to fetch todos", true);
+      throw handleError(e, t("errors.failedToFetchTodos"), true);
     } finally {
       isLoading.value = false;
       isInitializing.value = false;
@@ -146,7 +180,7 @@ export const useTodosStore = defineStore("todos", () => {
         },
       });
     } catch (e) {
-      throw handleError(e, "Failed to create todo", true);
+      throw handleError(e, t("errors.failedToCreateTodo"), true);
     }
   };
 
@@ -166,7 +200,7 @@ export const useTodosStore = defineStore("todos", () => {
       if (todo) {
         todo.is_completed = !completed;
       }
-      throw handleError(e, "Failed to update todo status", true);
+      throw handleError(e, t("errors.failedToUpdateTodo"), true);
     }
   };
 
@@ -188,7 +222,7 @@ export const useTodosStore = defineStore("todos", () => {
       if (deletedTodo) {
         items.value.splice(index, 0, deletedTodo);
       }
-      throw handleError(e, "Failed to delete todo", true);
+      throw handleError(e, t("errors.failedToDeleteTodo"), true);
     }
   };
 

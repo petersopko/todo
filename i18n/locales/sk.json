@@ -2,7 +2,8 @@
   "navigation": {
     "yourCategories": "Vaše kategórie",
     "dashboard": "Dashboard",
-    "finishedTasks": "Dokončené úlohy"
+    "finishedTasks": "Dokončené úlohy",
+    "uikit": "UI Kit"
   },
   "dashboard": {
     "greeting": "Ahoj",
@@ -40,5 +41,16 @@
     "travel": "Cestovanie",
     "career": "Kariéra",
     "workout": "Cvičenie"
+  },
+  "errors": {
+    "failedToLoadApp": "Nepodarilo sa načítať dáta aplikácie. Skúste to znova.",
+    "failedToLoadTasks": "Nepodarilo sa načítať úlohy. Niektoré funkcie môžu byť obmedzené.",
+    "failedToLoadCategories": "Nepodarilo sa načítať kategórie. Niektoré funkcie môžu byť obmedzené.",
+    "failedToFetchTodos": "Nepodarilo sa načítať úlohy",
+    "failedToCreateTodo": "Nepodarilo sa vytvoriť úlohu",
+    "failedToUpdateTodo": "Nepodarilo sa aktualizovať stav úlohy",
+    "failedToDeleteTodo": "Nepodarilo sa odstrániť úlohu",
+    "failedToConnect": "Nepodarilo sa pripojiť k serveru",
+    "failedToCreateTask": "Nepodarilo sa vytvoriť úlohu"
   }
 }

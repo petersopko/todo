@@ -29,9 +29,11 @@
             {{ $t("finishedTasks.title") }}
           </template>
         </h2>
-        <Badge v-if="viewType !== 'finished'" :color="badgeColor">
-          {{ filteredUncompletedTodos.length }}
-        </Badge>
+        <ClientOnly>
+          <Badge v-if="viewType !== 'finished'" :color="badgeColor">
+            {{ filteredUncompletedTodos.length }}
+          </Badge>
+        </ClientOnly>
       </div>
 
       <div v-if="isLoading" class="mt-8 flex items-center justify-center py-4">
@@ -58,9 +60,11 @@
                 {{ $t("dashboard.finishedTasks") }}
               </ClientOnly>
             </h1>
-            <Badge v-if="viewType === 'category'" :color="badgeColor">
-              {{ filteredCompletedTodos.length }}
-            </Badge>
+            <ClientOnly>
+              <Badge v-if="viewType === 'category'" :color="badgeColor">
+                {{ filteredCompletedTodos.length }}
+              </Badge>
+            </ClientOnly>
           </div>
           <div class="mt-4">
             <TodoList
@@ -112,7 +116,7 @@ import { useCategoriesStore } from "~/stores/categories";
 import { storeToRefs } from "pinia";
 import { hexToBadgeColor } from "~/utils/colors";
 import { useTimeGreeting } from "~/composables/useTimeGreeting";
-import { useLocalePath } from "#imports";
+import { useLocalePath, useI18n } from "#imports";
 import { useToastStore } from "~/stores/toast";
 
 const props = defineProps<{
@@ -121,6 +125,7 @@ const props = defineProps<{
 }>();
 
 const localePath = useLocalePath();
+const { t } = useI18n();
 
 const todosStore = useTodosStore();
 const userStore = useUserStore();
@@ -149,17 +154,11 @@ const initializeData = async () => {
     const failures = results.filter((r) => r.status === "rejected");
 
     if (failures.length === 2) {
-      toastStore.showError(
-        "Failed to load application data. Please try again.",
-      );
+      toastStore.showError(t("errors.failedToLoadApp"));
     } else if (results[0].status === "rejected") {
-      toastStore.showError(
-        "Failed to load tasks. Some features may be limited.",
-      );
+      toastStore.showError(t("errors.failedToLoadTasks"));
     } else if (results[1].status === "rejected") {
-      toastStore.showError(
-        "Failed to load categories. Some features may be limited.",
-      );
+      toastStore.showError(t("errors.failedToLoadCategories"));
     }
   } catch (error) {
     toastStore.showError(
@@ -186,11 +185,11 @@ const categoryName = computed(() => {
   );
 });
 
-const badgeColor = computed(() =>
-  props.viewType === "category"
-    ? hexToBadgeColor(category.value?.color || "")
-    : BadgeColor.BLACK,
-);
+const badgeColor = computed(() => {
+  if (props.viewType !== "category") return BadgeColor.BLACK;
+  if (!category.value?.color) return BadgeColor.BLUE;
+  return hexToBadgeColor(category.value.color);
+});
 
 const filteredCompletedTodos = computed(() =>
   props.viewType === "category"

@@ -7,9 +7,6 @@
       <Button
         variant="ternary"
         icon="CirclesFour"
-        :class="{
-          'bg-gray-1': selectedSection === NavigationSection.DASHBOARD,
-        }"
         @click="selectSection(NavigationSection.DASHBOARD)"
       >
         {{ $t("navigation.dashboard") }}
@@ -40,11 +37,6 @@
             variant="tertiary"
             icon="Dot"
             class="w-full flex-nowrap gap-3.5 whitespace-nowrap"
-            :class="{
-              'bg-gray-1':
-                selectedSection === NavigationSection.CATEGORY &&
-                category.id === selectedCategoryId,
-            }"
             @click="selectCategory(category.id)"
           >
             <span class="text-1 truncate">{{ category.name }}</span>
@@ -58,10 +50,20 @@
       <Button
         variant="ternary"
         icon="CheckSquare"
-        :class="{ 'bg-gray-1': selectedSection === NavigationSection.FINISHED }"
         @click="selectSection(NavigationSection.FINISHED)"
       >
         {{ $t("navigation.finishedTasks") }}
+      </Button>
+    </div>
+
+    <!-- UI Kit -->
+    <div class="mt-2">
+      <Button
+        variant="ternary"
+        icon="Palette"
+        @click="selectSection(NavigationSection.UI_KIT)"
+      >
+        {{ $t("navigation.uikit") }}
       </Button>
     </div>
 
@@ -93,8 +95,7 @@ const props = withDefaults(defineProps<Props>(), {
 const router = useRouter();
 const { locale } = useI18n();
 const categoriesStore = useCategoriesStore();
-const { isLoading, error, selectedCategoryId, translatedCategories } =
-  storeToRefs(categoriesStore);
+const { isLoading, error, translatedCategories } = storeToRefs(categoriesStore);
 const selectedSection = ref<NavigationSection>(NavigationSection.DASHBOARD);
 
 const selectSection = (section: NavigationSection) => {

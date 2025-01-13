@@ -10,6 +10,7 @@
     <PhosphorIconCaretDown v-if="name === 'CaretDown'" v-bind="$attrs" />
     <PhosphorIconWarningCircle v-if="name === 'Warning'" v-bind="$attrs" />
     <PhosphorIconInfo v-if="name === 'Info'" v-bind="$attrs" />
+    <PhosphorIconPalette v-if="name === 'Palette'" v-bind="$attrs" />
   </template>
   <div v-else v-bind="$attrs" />
 </template>
@@ -26,7 +27,8 @@ type IconName =
   | "CheckSquare"
   | "CaretDown"
   | "Warning"
-  | "Info";
+  | "Info"
+  | "Palette";
 
 defineProps<{
   name: IconName;

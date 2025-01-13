@@ -1,5 +1,11 @@
+import { callApi } from "../../utils/api";
+import type { Todo } from "~/types/api";
+
+interface ApiResponse {
+  data: Todo;
+}
+
 export default defineEventHandler(async (event) => {
-  const config = useRuntimeConfig(event);
   const body = await readBody(event);
   const id = getRouterParam(event, "id");
 
@@ -12,32 +18,11 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const response = await fetch(
-      `${config.apiBaseUrl}/todos/${id}?access_token=${config.apiAccessToken}`,
-      {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body),
-      },
-    );
-
-    if (!response.ok) {
-      return {
-        error: true,
-        statusCode: response.status,
-        message: `Failed to update todo: ${response.statusText}`,
-      };
-    }
-
-    const data = await response.json();
-    return data;
+    return await callApi<ApiResponse>(event, `todos/${id}`, {
+      method: "PATCH",
+      body,
+    });
   } catch (error) {
-    return {
-      error: true,
-      statusCode: 500,
-      message: error instanceof Error ? error.message : "Failed to update todo",
-    };
+    return error;
   }
 });

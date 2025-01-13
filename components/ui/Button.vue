@@ -9,8 +9,10 @@
         'hover:border-gray-2 disabled:hover:border-gray-3 border-gray-3 flex items-center justify-center gap-2 rounded-full border bg-white px-6 py-4 text-black transition-colors disabled:opacity-50',
       variant === 'tertiary' &&
         'hover:border-gray-4 flex h-10 flex-row items-center justify-start rounded-full bg-white px-10 transition-all hover:border',
-      variant === 'ternary' &&
-        'hover:bg-gray-1 flex h-12 w-full items-center gap-3.5 rounded-full bg-[#F6F6F6] px-6 transition-all',
+      variant === 'ternary' && [
+        'flex h-12 w-full items-center gap-3.5 rounded-full px-6 transition-all',
+        active ? 'bg-light-gray-2' : 'hover:bg-gray-1 bg-[#F6F6F6]',
+      ],
       variant === 'icon' &&
         `flex h-10 w-10 items-center justify-center ${shape === 'circle' ? 'rounded-full' : 'rounded-lg'} border-gray-5 border bg-white`,
       $attrs.class || '',
@@ -25,7 +27,6 @@
         :name="icon"
         :class="[
           icon === 'Dot' ? 'h-2.5 w-2.5 rounded bg-black' : 'text-2 h-5 w-5',
-          icon === 'CaretDown' && 'transition-transform duration-200',
           icon === 'CaretDown' && 'transition-transform duration-200',
           iconClass,
         ]"
@@ -66,7 +67,10 @@ type Icon =
   | "Dot"
   | "CirclesFour"
   | "CheckSquare"
-  | "CaretDown";
+  | "CaretDown"
+  | "Warning"
+  | "Info"
+  | "Palette";
 
 interface Props {
   variant?: ButtonVariant;
@@ -76,9 +80,10 @@ interface Props {
   appendIcon?: boolean;
   disabled?: boolean;
   ariaLabel?: string;
+  active?: boolean;
 }
 
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
   variant: "primary",
   shape: "default",
   disabled: false,
@@ -86,6 +91,7 @@ withDefaults(defineProps<Props>(), {
   iconClass: "",
   appendIcon: false,
   ariaLabel: undefined,
+  active: false,
 });
 
 defineOptions({

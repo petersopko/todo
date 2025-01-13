@@ -2,7 +2,8 @@
   "navigation": {
     "yourCategories": "Your Categories",
     "dashboard": "Dashboard",
-    "finishedTasks": "Finished tasks"
+    "finishedTasks": "Finished tasks",
+    "uikit": "UI Kit"
   },
   "dashboard": {
     "greeting": "Hello",
@@ -40,5 +41,16 @@
     "travel": "Travel",
     "career": "Career",
     "workout": "Workout"
+  },
+  "errors": {
+    "failedToLoadApp": "Failed to load application data. Please try again.",
+    "failedToLoadTasks": "Failed to load tasks. Some features may be limited.",
+    "failedToLoadCategories": "Failed to load categories. Some features may be limited.",
+    "failedToFetchTodos": "Failed to fetch todos",
+    "failedToCreateTodo": "Failed to create todo",
+    "failedToUpdateTodo": "Failed to update todo status",
+    "failedToDeleteTodo": "Failed to delete todo",
+    "failedToConnect": "Failed to connect to the server",
+    "failedToCreateTask": "Failed to create task"
   }
 }

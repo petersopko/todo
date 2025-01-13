@@ -95,6 +95,15 @@ export const useCategoriesStore = defineStore("categories", () => {
     }
   };
 
+  const handleError = (e: unknown, showToast = true) => {
+    const message = t("errors.failedToConnect");
+    error.value = message;
+    if (showToast && import.meta.client) {
+      toastStore.showError(message);
+    }
+    return new Error(message);
+  };
+
   return {
     items,
     selectedCategoryId,
@@ -107,5 +116,6 @@ export const useCategoriesStore = defineStore("categories", () => {
     translatedCategories,
     selectCategory,
     fetchCategories,
+    handleError,
   };
 });

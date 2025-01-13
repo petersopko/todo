@@ -1,5 +1,10 @@
+import { callApi } from "../../utils/api";
+
+interface ApiResponse {
+  data: null;
+}
+
 export default defineEventHandler(async (event) => {
-  const config = useRuntimeConfig(event);
   const id = getRouterParam(event, "id");
 
   if (!id) {
@@ -11,27 +16,10 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const response = await fetch(
-      `${config.apiBaseUrl}/todos/${id}?access_token=${config.apiAccessToken}`,
-      {
-        method: "DELETE",
-      },
-    );
-
-    if (!response.ok) {
-      return {
-        error: true,
-        statusCode: response.status,
-        message: `Failed to delete todo: ${response.statusText}`,
-      };
-    }
-
-    return { success: true };
+    return await callApi<ApiResponse>(event, `todos/${id}`, {
+      method: "DELETE",
+    });
   } catch (error) {
-    return {
-      error: true,
-      statusCode: 500,
-      message: error instanceof Error ? error.message : "Failed to delete todo",
-    };
+    return error;
   }
 });

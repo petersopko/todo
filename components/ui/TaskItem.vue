@@ -1,5 +1,5 @@
 <template>
-  <div class="group flex items-center gap-4 rounded-xl bg-white p-6">
+  <div class="group flex items-center gap-4 rounded-xl bg-white p-4">
     <Checkbox v-model="isCompleted" @update:model-value="onToggleComplete" />
     <div class="flex flex-1 items-center gap-4">
       <span
@@ -10,14 +10,16 @@
       </span>
       <Badge :color="badgeColor">{{ todo.category.name }}</Badge>
     </div>
-    <Button
-      v-if="todo.is_completed"
-      variant="icon"
-      shape="square"
-      icon="Trash"
-      class="hover:border-red hover:text-red hover:text-4 hover:border-2"
-      @click="$emit('delete', todo.id)"
-    />
+    <div class="flex h-10 w-10 items-center justify-center">
+      <Button
+        v-if="todo.is_completed"
+        variant="icon"
+        shape="square"
+        icon="Trash"
+        class="hover:border-red hover:text-red hover:text-4 hover:border-2"
+        @click="$emit('delete', todo.id)"
+      />
+    </div>
   </div>
 </template>
 
