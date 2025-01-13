@@ -4,7 +4,7 @@ export default defineEventHandler(async (event) => {
 
   try {
     const response = await fetch(
-      `${config.apiBaseUrl}/todos?access_token=${config.accessToken}`,
+      `${config.apiBaseUrl}/todos?access_token=${config.apiAccessToken}`,
       {
         method: "POST",
         headers: {
