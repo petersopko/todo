@@ -1,7 +1,7 @@
 <template>
   <div>
     <div
-      class="fixed left-0 right-0 top-0 z-40 m-6 flex h-[72px] items-center justify-between bg-white p-6 transition-all duration-200"
+      class="fixed left-0 right-0 top-0 z-40 m-6 flex h-[72px] max-h-dvh items-center justify-between bg-white p-6 transition-all duration-200"
       :class="{
         'rounded-t-lg': isMenuOpen,
         'rounded-lg shadow': !isMenuOpen,

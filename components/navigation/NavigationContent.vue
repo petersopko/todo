@@ -1,5 +1,5 @@
 <template>
-  <div class="flex h-full max-h-dvh flex-col">
+  <div class="flex h-full flex-col">
     <slot name="logo" />
 
     <!-- Dashboard -->
