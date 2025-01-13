@@ -1,0 +1,44 @@
+{
+  "navigation": {
+    "yourCategories": "Vaše kategórie",
+    "dashboard": "Dashboard",
+    "finishedTasks": "Dokončené úlohy"
+  },
+  "dashboard": {
+    "greeting": "Ahoj",
+    "tasksForToday": "Vaše dnešné úlohy",
+    "loading": "Načítavam...",
+    "finishedTasks": "Vaše nedávno dokončené úlohy",
+    "seeAllFinished": "Zobraziť všetky dokončené úlohy"
+  },
+  "category": {
+    "tasksInCategory": "Vaše úlohy v kategórii: {category}",
+    "recentlyFinished": "Vaše nedávno dokončené úlohy"
+  },
+  "newTask": {
+    "title": "Nová úloha",
+    "placeholder": "Čo chcete urobiť?",
+    "selectCategory": "Vyberte kategóriu",
+    "createButton": "Pridať novú úlohu"
+  },
+  "finishedTasks": {
+    "title": "Vaše dokončené úlohy",
+    "loading": "Načítavam..."
+  },
+  "common": {
+    "error": "Vyskytla sa chyba",
+    "loading": "Načítavam..."
+  },
+  "time": {
+    "morning": "Dobré ráno",
+    "afternoon": "Dobrý deň",
+    "evening": "Dobrý večer",
+    "dateFormat": "{day}.{month}.{year}"
+  },
+  "categories": {
+    "personal": "Osobné",
+    "travel": "Cestovanie",
+    "career": "Kariéra",
+    "workout": "Cvičenie"
+  }
+}

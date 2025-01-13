@@ -1,0 +1,44 @@
+{
+  "navigation": {
+    "yourCategories": "Your Categories",
+    "dashboard": "Dashboard",
+    "finishedTasks": "Finished tasks"
+  },
+  "dashboard": {
+    "greeting": "Hello",
+    "tasksForToday": "Your tasks for today",
+    "loading": "Loading...",
+    "finishedTasks": "Your recently finished tasks",
+    "seeAllFinished": "See all finished tasks"
+  },
+  "newTask": {
+    "title": "New task",
+    "placeholder": "What do you want to do?",
+    "selectCategory": "Select category",
+    "createButton": "Add new task"
+  },
+  "finishedTasks": {
+    "title": "Your finished tasks",
+    "loading": "Loading..."
+  },
+  "common": {
+    "error": "An error occurred",
+    "loading": "Loading..."
+  },
+  "time": {
+    "morning": "Good morning",
+    "afternoon": "Good afternoon",
+    "evening": "Good evening",
+    "dateFormat": "{day}.{month}.{year}"
+  },
+  "category": {
+    "tasksInCategory": "Your tasks in category: {category}",
+    "recentlyFinished": "Your recently finished tasks"
+  },
+  "categories": {
+    "personal": "Personal",
+    "travel": "Travel",
+    "career": "Career",
+    "workout": "Workout"
+  }
+}

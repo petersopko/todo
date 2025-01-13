@@ -1,0 +1,7 @@
+@font-face {
+  font-family: "DM Sans";
+  src: url("../fonts/DMSans.ttf") format("truetype");
+  font-weight: 400 500;
+  font-style: normal;
+  font-display: swap;
+}

@@ -1,0 +1,61 @@
+.heading-1 {
+  @apply text-[32px] font-medium leading-[41.66px];
+}
+@screen md {
+  .heading-1 {
+    @apply tracking-heading text-2xl;
+  }
+}
+
+.heading-2 {
+  @apply text-[20px] font-medium leading-[26.04px];
+}
+@screen md {
+  .heading-2 {
+    @apply text-xl;
+  }
+}
+
+.heading-uikit {
+  @apply text-2xl-ui font-medium;
+}
+
+.text-1 {
+  @apply text-base font-medium leading-5;
+}
+@screen md {
+  .text-1 {
+    @apply text-lg;
+  }
+}
+
+.text-2 {
+  @apply text-base font-medium leading-5;
+}
+@screen md {
+  .text-2 {
+    @apply text-base;
+  }
+}
+
+.text-3 {
+  @apply text-sm font-medium leading-[18.23px];
+}
+@screen md {
+  .text-3 {
+    @apply text-sm;
+  }
+}
+
+.label {
+  @apply text-dark-gray-2 text-xs font-bold uppercase leading-[15.62px] tracking-[2px];
+}
+@screen md {
+  .label {
+    @apply tracking-label;
+  }
+}
+
+.ui-heading-1 {
+  @apply text-2xl-ui tracking-heading font-medium;
+}

@@ -1,75 +1,77 @@
-# Nuxt Minimal Starter
-
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
-
-## Setup
-
-Make sure to install dependencies:
-
-```bash
-# npm
-npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
 ```
+todo
 
-## Development Server
+|-.gitignore
+|-README.md
+|-assets
+| |-css
+| | |-fonts.css
+| | |-typography.css
+| |-fonts
+| | |-DMSans.ttf
+|-bun.lockb
+|-components
+| |-LanguageSwitcher.vue
+| |-MobileNavbar.vue
+| |-NewTaskModal.vue
+| |-Sidebar.vue
+| |-ui
+| | |-Badge.vue
+| | |-Button.vue
+| | |-CategoryItem.vue
+| | |-Checkbox.vue
+| | |-ColorBox.vue
+| | |-DashboardItem.vue
+| | |-Dropdown.vue
+| | |-FinishedTasksItem.vue
+| | |-Logo.vue
+| | |-Modal.vue
+| | |-Radio.vue
+| | |-TaskItem.vue
+| | |-TextField.vue
+|-composables
+| |-useDragAndDrop.ts
+| |-useTimeGreeting.ts
+|-data
+| |-ui.ts
+|-i18n
+| |-locales
+| | |-en.json
+| | |-sk.json
+|-layouts
+| |-default.vue
+|-nuxt.config.ts
+|-package.json
+|-pages
+| |-api-test.vue
+| |-category
+| | |-[id].vue
+| |-finished.vue
+| |-index.vue
+| |-ui.vue
+|-plugins
+|-public
+| |-favicon.ico
+| |-logo.png
+| |-robots.txt
+|-server
+| |-api
+| | |-categories.get.ts
+| | |-todos
+| | | |-[id].delete.ts
+| | | |-[id].patch.ts
+| | | |-index.get.ts
+| | | |-index.post.ts
+| |-tsconfig.json
+|-stores
+| |-categories.ts
+| |-newTask.ts
+| |-todos.ts
+| |-user.ts
+|-tsconfig.json
+|-types
+| |-api.ts
+|-utils
+| |-colors.ts
 
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
 ```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
