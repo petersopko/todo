@@ -15,8 +15,8 @@ export const badges = [
 export const colors = [
   { name: "black", label: "Black", hex: "#000000" },
   { name: "light-gray-1", label: "Light Gray 1", hex: "#F5F5F5" },
-  { name: "light-gray-2", label: "Light Gray 2", hex: "#F6F6F6" },
-  { name: "gray-1", label: "Gray 1", hex: "#F6F6F6" },
+  { name: "light-gray-2", label: "Light Gray 2", hex: "#EEEEEE" },
+  { name: "gray-1", label: "Gray 1", hex: "#DDDDDD" },
   { name: "gray-2", label: "Gray 2", hex: "#AAAAAA" },
   { name: "dark-gray", label: "Dark Gray", hex: "#4F4F4F" },
   { name: "white", label: "White", hex: "#FFFFFF" },
@@ -44,6 +44,10 @@ export const textFieldStates: Array<{
 
 export const typographyItems = [
   {
+    label: "UI Heading",
+    class: "heading-uikit",
+  },
+  {
     label: "Heading 1",
     class: "heading-1",
   },
@@ -51,10 +55,7 @@ export const typographyItems = [
     label: "Heading 2",
     class: "heading-2",
   },
-  {
-    label: "UI Heading",
-    class: "heading-uikit",
-  },
+
   {
     label: "Text 1",
     class: "text-1",

@@ -25,8 +25,7 @@
       <span
         class="text-dark-gray-2 pointer-events-none absolute left-4 top-4 text-xs"
         :class="{ 'opacity-50': disabled }"
-      >
-      </span>
+      />
     </div>
     <span v-if="error" class="text-red absolute -bottom-5 left-4 text-xs">
       {{ error }}

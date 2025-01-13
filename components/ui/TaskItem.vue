@@ -1,6 +1,6 @@
 <template>
   <div class="group flex items-center gap-4 rounded-xl bg-white p-6">
-    <Checkbox v-model="isCompleted" @update:modelValue="onToggleComplete" />
+    <Checkbox v-model="isCompleted" @update:model-value="onToggleComplete" />
     <div class="flex flex-1 items-center gap-4">
       <span
         class="text-1"
@@ -15,8 +15,8 @@
       variant="icon"
       shape="square"
       icon="Trash"
-      @click="$emit('delete', todo.id)"
       class="hover:border-red hover:text-red hover:text-4 hover:border-2"
+      @click="$emit('delete', todo.id)"
     />
   </div>
 </template>

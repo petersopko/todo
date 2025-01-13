@@ -6,7 +6,6 @@ import { useUserStore } from "~/stores/user";
 import { useToastStore } from "~/stores/toast";
 
 export const useTodosStore = defineStore("todos", () => {
-  console.log("[TodosStore] Creating store instance");
   const items = ref<Todo[]>([]);
   const isLoading = ref(false);
   const error = ref<string | null>(null);
@@ -31,11 +30,7 @@ export const useTodosStore = defineStore("todos", () => {
       items.value?.filter(
         (todo) => todo.category?.id === categoryId && todo.is_completed,
       ) ?? []
-    ).sort((a, b) => {
-      const dateA = new Date(a.date_updated || a.date_created);
-      const dateB = new Date(b.date_updated || b.date_created);
-      return dateB.getTime() - dateA.getTime();
-    });
+    );
   };
 
   const getUncompletedTodosByCategory = (categoryId: string) => {
@@ -46,12 +41,8 @@ export const useTodosStore = defineStore("todos", () => {
     );
   };
 
-  const completedTodos = computed(() =>
-    (items.value?.filter((todo) => todo.is_completed) ?? []).sort((a, b) => {
-      const dateA = new Date(a.date_updated || a.date_created);
-      const dateB = new Date(b.date_updated || b.date_created);
-      return dateB.getTime() - dateA.getTime();
-    }),
+  const completedTodos = computed(
+    () => items.value?.filter((todo) => todo.is_completed) ?? [],
   );
 
   const recentCompletedTodos = computed(() => completedTodos.value.slice(0, 3));
@@ -81,18 +72,9 @@ export const useTodosStore = defineStore("todos", () => {
 
   const fetchTodos = async () => {
     if (hasInitialized.value || isInitializing.value) {
-      console.log(
-        "[TodosStore] Skipping fetch - already initialized or initializing",
-        {
-          hasInitialized: hasInitialized.value,
-          isInitializing: isInitializing.value,
-          itemCount: items.value?.length,
-        },
-      );
       return;
     }
 
-    console.log("[TodosStore] Starting fetch");
     isLoading.value = true;
     isInitializing.value = true;
     error.value = null;
@@ -101,16 +83,17 @@ export const useTodosStore = defineStore("todos", () => {
       const response = await $fetch<
         { data: Todo[] } | { error: true; statusCode: number; message: string }
       >("/api/todos", {
-        params: { fields: "*.*" },
+        params: {
+          fields: "*.*",
+          sort: "-date_updated",
+        },
       });
 
       if ("error" in response) {
-        console.error("[TodosStore] API error response:", response);
         throw new Error(response.message);
       }
 
       if (!response?.data || !Array.isArray(response.data)) {
-        console.error("[TodosStore] Invalid API response:", response);
         throw new Error("Invalid response format from API");
       }
 
@@ -124,26 +107,15 @@ export const useTodosStore = defineStore("todos", () => {
       }));
 
       hasInitialized.value = true;
-      console.log("[TodosStore] Fetch successful:", {
-        itemCount: items.value.length,
-        hasInitialized: hasInitialized.value,
-      });
 
       if (items.value.length > 0 && items.value[0].user_created) {
         userStore.setUser(items.value[0].user_created);
       }
     } catch (e) {
-      console.error("[TodosStore] Fetch failed:", e);
       items.value = [];
       hasInitialized.value = false;
       throw handleError(e, "Failed to fetch todos", true);
     } finally {
-      console.log("[TodosStore] Fetch complete", {
-        hasInitialized: hasInitialized.value,
-        isInitializing: isInitializing.value,
-        itemCount: items.value?.length,
-        error: error.value,
-      });
       isLoading.value = false;
       isInitializing.value = false;
     }
@@ -222,45 +194,23 @@ export const useTodosStore = defineStore("todos", () => {
 
   const reorderTodos = (newOrder: Todo[]) => {
     if (newOrder.length !== items.value.length) {
-      console.warn("Attempted to reorder with different number of items:", {
-        current: items.value.length,
-        new: newOrder.length,
-      });
       return;
     }
 
     const currentIds = new Set(items.value.map((t) => t.id));
     const newIds = new Set(newOrder.map((t) => t.id));
     if (currentIds.size !== newIds.size) {
-      console.warn("Attempted to reorder with different items");
       return;
     }
 
-    console.log("Reordering todos:", {
-      before: items.value.length,
-      after: newOrder.length,
-    });
     items.value = newOrder;
   };
 
-  watch(items, (newItems, oldItems) => {
-    console.log("items changed:", {
-      oldLength: oldItems?.length,
-      newLength: newItems.length,
-      stack: new Error().stack,
-    });
-  });
+  watch(items, () => {});
 
-  watch(completedTodos, (newCompletedTodos) => {
-    console.log("completedTodos changed:", newCompletedTodos.length);
-  });
+  watch(completedTodos, () => {});
 
-  watch(recentCompletedTodos, (newRecentCompletedTodos) => {
-    console.log(
-      "recentCompletedTodos changed:",
-      newRecentCompletedTodos.length,
-    );
-  });
+  watch(recentCompletedTodos, () => {});
 
   return {
     items,

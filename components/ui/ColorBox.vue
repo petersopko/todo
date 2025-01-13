@@ -27,8 +27,8 @@ const props = defineProps<Props>();
 const colors = {
   black: "#000000",
   "light-gray-1": "#F5F5F5",
-  "light-gray-2": "#F6F6F6",
-  "gray-1": "#F6F6F6",
+  "light-gray-2": "#EEEEEE",
+  "gray-1": "#DDDDDD",
   "gray-2": "#AAAAAA",
   "dark-gray": "#4F4F4F",
   white: "#FFFFFF",

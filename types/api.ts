@@ -31,4 +31,5 @@ export enum NavigationSection {
   DASHBOARD = "dashboard",
   CATEGORY = "category",
   FINISHED = "finished",
+  UI_KIT = "ui-kit",
 }

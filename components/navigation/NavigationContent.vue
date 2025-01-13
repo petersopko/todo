@@ -106,6 +106,9 @@ const selectSection = (section: NavigationSection) => {
     case NavigationSection.FINISHED:
       router.push(`/${locale.value}/finished`);
       break;
+    case NavigationSection.UI_KIT:
+      router.push(`/${locale.value}/ui-kit`);
+      break;
   }
   props.onNavigate?.();
 };
