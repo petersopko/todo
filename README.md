@@ -1,7 +1,19 @@
+# todo app
+
+## to launch:
+
+```
+bun install
+bun dev
+```
+
+## project structure
+
 ```
 todo
 
 |-.gitignore
+|-.prettierrc
 |-README.md
 |-assets
 | |-css
@@ -11,29 +23,32 @@ todo
 | | |-DMSans.ttf
 |-bun.lockb
 |-components
+| |-DesktopSidebar.vue
 | |-LanguageSwitcher.vue
 | |-MobileNavbar.vue
 | |-NewTaskModal.vue
-| |-Sidebar.vue
+| |-TodoList.vue
+| |-TodosView.vue
+| |-navigation
+| | |-NavigationContent.vue
 | |-ui
 | | |-Badge.vue
 | | |-Button.vue
-| | |-CategoryItem.vue
 | | |-Checkbox.vue
 | | |-ColorBox.vue
-| | |-DashboardItem.vue
 | | |-Dropdown.vue
-| | |-FinishedTasksItem.vue
 | | |-Logo.vue
 | | |-Modal.vue
+| | |-PhosphorIcon.vue
 | | |-Radio.vue
 | | |-TaskItem.vue
 | | |-TextField.vue
+| | |-Toast.vue
 |-composables
-| |-useDragAndDrop.ts
 | |-useTimeGreeting.ts
 |-data
 | |-ui.ts
+|-eslint.config.mjs
 |-i18n
 | |-locales
 | | |-en.json
@@ -43,13 +58,11 @@ todo
 |-nuxt.config.ts
 |-package.json
 |-pages
-| |-api-test.vue
 | |-category
 | | |-[id].vue
 | |-finished.vue
 | |-index.vue
-| |-ui.vue
-|-plugins
+| |-ui-kit.vue
 |-public
 | |-favicon.ico
 | |-logo.png
@@ -63,15 +76,22 @@ todo
 | | | |-index.get.ts
 | | | |-index.post.ts
 | |-tsconfig.json
+| |-utils
+| | |-api.ts
 |-stores
 | |-categories.ts
+| |-language.ts
+| |-navigation.ts
 | |-newTask.ts
+| |-toast.ts
 | |-todos.ts
 | |-user.ts
 |-tsconfig.json
 |-types
 | |-api.ts
+| |-ui.ts
 |-utils
 | |-colors.ts
+| |-errorHandling.ts
 
 ```
