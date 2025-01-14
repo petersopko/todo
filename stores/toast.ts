@@ -17,9 +17,10 @@ export const useToastStore = defineStore("toast", () => {
     const id = nextId++;
     toasts.value.push({ id, message, type });
 
-    setTimeout(() => {
+    // Temporarily disabled for demo purposes
+    /*setTimeout(() => {
       toasts.value = toasts.value.filter((t) => t.id !== id);
-    }, 3000);
+    }, 3000);*/
   };
 
   const showError = (message: string) => show(message, "error");

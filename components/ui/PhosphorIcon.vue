@@ -8,7 +8,7 @@
     <PhosphorIconCirclesFour v-if="name === 'CirclesFour'" v-bind="$attrs" />
     <PhosphorIconCheckSquare v-if="name === 'CheckSquare'" v-bind="$attrs" />
     <PhosphorIconCaretDown v-if="name === 'CaretDown'" v-bind="$attrs" />
-    <PhosphorIconWarningCircle v-if="name === 'Warning'" v-bind="$attrs" />
+    <PhosphorIconWarning v-if="name === 'Warning'" v-bind="$attrs" />
     <PhosphorIconInfo v-if="name === 'Info'" v-bind="$attrs" />
     <PhosphorIconPalette v-if="name === 'Palette'" v-bind="$attrs" />
   </template>

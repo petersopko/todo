@@ -93,7 +93,7 @@
 
     <Button
       icon="Plus"
-      class="fixed bottom-12 left-12 right-12 lg:bottom-16 lg:left-auto lg:right-16"
+      class="fixed bottom-4 left-12 right-12 lg:bottom-16 lg:left-auto lg:right-16"
       @click="showNewTaskModal = true"
     >
       {{ $t("newTask.title") }}
