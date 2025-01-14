@@ -27,9 +27,9 @@
     "loading": "Loading..."
   },
   "time": {
-    "morning": "Good morning",
-    "afternoon": "Good afternoon",
-    "evening": "Good evening",
+    "morning": "Good Morning",
+    "afternoon": "Good Afternoon",
+    "evening": "Good Evening",
     "dateFormat": "{day}.{month}.{year}"
   },
   "category": {
