@@ -1,13 +1,18 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
+import { useCategoriesStore } from "./categories";
 
 export const useNewTaskStore = defineStore("newTask", () => {
   const text = ref("");
   const selectedCategoryId = ref("");
+  const categoriesStore = useCategoriesStore();
 
-  const isValid = computed(
-    () => text.value.trim().length > 0 && selectedCategoryId.value,
-  );
+  const isValid = computed(() => {
+    const categoryExists = categoriesStore.items.some(
+      (category) => category.id === selectedCategoryId.value,
+    );
+    return text.value.trim().length > 0 && categoryExists;
+  });
 
   const selectCategory = (categoryId: string) => {
     selectedCategoryId.value = categoryId;

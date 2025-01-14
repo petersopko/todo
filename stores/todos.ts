@@ -54,7 +54,6 @@ export const useTodosStore = defineStore("todos", () => {
     });
   };
 
-  // Computed getters using the filter function
   const getTodoById = (id: string) =>
     translatedTodos.value.find((todo) => todo.id === id);
 
