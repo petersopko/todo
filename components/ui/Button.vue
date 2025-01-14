@@ -83,7 +83,7 @@ interface Props {
   active?: boolean;
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   variant: "primary",
   shape: "default",
   disabled: false,

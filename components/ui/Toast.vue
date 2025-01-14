@@ -9,43 +9,37 @@
         leave-active-class="transition duration-200 ease-in"
         leave-from-class="transform translate-y-0 opacity-100"
         leave-to-class="transform translate-y-2 opacity-0"
-        class="fixed bottom-4 left-1/2 z-50 flex -translate-x-1/2 flex-col gap-2"
+        class="fixed bottom-20 left-1/2 z-50 flex -translate-x-1/2 flex-col gap-2 lg:bottom-4"
       >
         <div
           v-for="toast in toasts"
           :key="toast.id"
-          class="flex min-w-[300px] max-w-md items-center justify-between gap-3 rounded-lg bg-gray-900/95 px-4 py-3 text-white shadow-lg backdrop-blur-sm"
+          class="flex min-w-[300px] max-w-md items-center justify-between gap-3 rounded-lg px-4 py-3 text-black shadow-lg backdrop-blur-sm"
           :class="{
-            'border-l-4 border-red-500': toast.type === 'error',
-            'border-l-4 border-green-500': toast.type === 'success',
-            'border-l-4 border-blue-500': toast.type === 'info',
+            'bg-red': toast.type === 'error',
+            'bg-green': toast.type === 'success',
+            'bg-orange': toast.type === 'info',
           }"
         >
           <div class="flex items-center gap-3">
             <PhosphorIcon
               :name="getIconForType(toast.type)"
               class="h-5 w-5 flex-shrink-0"
-              :class="{
-                'text-red-500': toast.type === 'error',
-                'text-green-500': toast.type === 'success',
-                'text-blue-500': toast.type === 'info',
-              }"
               weight="fill"
             />
             <p class="text-sm">{{ toast.message }}</p>
           </div>
-          <button
-            class="flex-shrink-0 rounded-lg p-1 text-gray-400 transition-colors hover:bg-white/10 hover:text-white"
-            type="button"
+          <Button
+            variant="icon"
+            icon="X"
             aria-label="Dismiss"
+            class="!h-8 !w-8 !border-0 !bg-transparent text-black hover:!bg-white/10 hover:text-black"
             @click="
               toastStore.toasts = toastStore.toasts.filter(
                 (t) => t.id !== toast.id,
               )
             "
-          >
-            <PhosphorIcon name="X" class="h-4 w-4" />
-          </button>
+          />
         </div>
       </TransitionGroup>
     </ClientOnly>
@@ -55,6 +49,7 @@
 <script setup lang="ts">
 import { useToastStore } from "~/stores/toast";
 import { storeToRefs } from "pinia";
+import Button from "./Button.vue";
 
 type ToastType = "error" | "success" | "info";
 
