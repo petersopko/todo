@@ -1,6 +1,8 @@
 import { defineStore } from "pinia";
 import { ref, computed, watch } from "vue";
 import type { Todo } from "~/types/api";
+import type { ApiResponse } from "~/utils/errorHandling";
+import { handleApiError } from "~/utils/errorHandling";
 import { useCategoriesStore } from "~/stores/categories";
 import { useUserStore } from "~/stores/user";
 import { useToastStore } from "~/stores/toast";
@@ -82,17 +84,10 @@ export const useTodosStore = defineStore("todos", () => {
     hasInitialized.value = false;
   };
 
-  const handleError = (
-    e: unknown,
-    defaultMessage: string,
-    showToast = true,
-  ) => {
-    const message = e instanceof Error ? e.message : defaultMessage;
-    error.value = message;
-    if (showToast && import.meta.client) {
-      toastStore.showError(message);
-    }
-    return new Error(message);
+  const handleError = (e: unknown, defaultMessage: string) => {
+    const result = handleApiError(e, defaultMessage);
+    error.value = result.message;
+    return new Error(result.message);
   };
 
   const fetchTodos = async () => {
@@ -105,9 +100,7 @@ export const useTodosStore = defineStore("todos", () => {
     error.value = null;
 
     try {
-      const response = await $fetch<
-        { data: Todo[] } | { error: true; statusCode: number; message: string }
-      >("/api/todos", {
+      const response = await $fetch<ApiResponse<Todo[]>>("/api/todos", {
         params: {
           fields: "*.*",
           sort: "-date_updated",
@@ -115,11 +108,7 @@ export const useTodosStore = defineStore("todos", () => {
       });
 
       if ("error" in response) {
-        throw new Error(response.message);
-      }
-
-      if (!response?.data || !Array.isArray(response.data)) {
-        throw new Error("Invalid response format from API");
+        throw response;
       }
 
       items.value = response.data.map((todo) => {
@@ -147,7 +136,7 @@ export const useTodosStore = defineStore("todos", () => {
     } catch (e) {
       items.value = [];
       hasInitialized.value = false;
-      throw handleError(e, t("errors.failedToFetchTodos"), true);
+      throw handleError(e, t("errors.failedToFetchTodos"));
     } finally {
       isLoading.value = false;
       isInitializing.value = false;
@@ -156,7 +145,7 @@ export const useTodosStore = defineStore("todos", () => {
 
   const createTodo = async (text: string, categoryId: string) => {
     try {
-      const response = await $fetch<{ data: Todo }>("/api/todos", {
+      const response = await $fetch<ApiResponse<Todo>>("/api/todos", {
         method: "POST",
         body: {
           todo: text,
@@ -164,9 +153,13 @@ export const useTodosStore = defineStore("todos", () => {
         },
       });
 
+      if ("error" in response) {
+        throw response;
+      }
+
       const category = categoriesStore.getCategoryById(categoryId);
       if (!category) {
-        throw new Error("Category not found");
+        throw new Error(t("errors.categoryNotFound"));
       }
 
       items.value.push({
@@ -179,7 +172,7 @@ export const useTodosStore = defineStore("todos", () => {
         },
       });
     } catch (e) {
-      throw handleError(e, t("errors.failedToCreateTodo"), true);
+      throw handleError(e, t("errors.failedToCreateTodo"));
     }
   };
 
@@ -191,15 +184,19 @@ export const useTodosStore = defineStore("todos", () => {
 
       todo.is_completed = completed;
 
-      await $fetch(`/api/todos/${id}`, {
+      const response = await $fetch<ApiResponse<Todo>>(`/api/todos/${id}`, {
         method: "PATCH",
         body: { is_completed: completed },
       });
+
+      if ("error" in response) {
+        throw response;
+      }
     } catch (e) {
       if (todo) {
         todo.is_completed = !completed;
       }
-      throw handleError(e, t("errors.failedToUpdateTodo"), true);
+      throw handleError(e, t("errors.failedToUpdateTodo"));
     }
   };
 
@@ -213,15 +210,20 @@ export const useTodosStore = defineStore("todos", () => {
 
       deletedTodo = items.value.splice(index, 1)[0];
 
-      await $fetch(`/api/todos/${id}`, {
+      const response = await $fetch<ApiResponse<void>>(`/api/todos/${id}`, {
         method: "DELETE",
       });
-      toastStore.showSuccess("Task deleted successfully");
+
+      if ("error" in response) {
+        throw response;
+      }
+
+      toastStore.showSuccess(t("messages.taskDeleted"));
     } catch (e) {
       if (deletedTodo) {
         items.value.splice(index, 0, deletedTodo);
       }
-      throw handleError(e, t("errors.failedToDeleteTodo"), true);
+      throw handleError(e, t("errors.failedToDeleteTodo"));
     }
   };
 
