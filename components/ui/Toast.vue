@@ -56,17 +56,6 @@ type ToastType = "error" | "success" | "info";
 const toastStore = useToastStore();
 const { toasts } = storeToRefs(toastStore);
 
-// Show example toasts for demonstration
-onMounted(() => {
-  toastStore.show("This is an info message", "info");
-  setTimeout(() => {
-    toastStore.show("Operation completed successfully!", "success");
-  }, 500);
-  setTimeout(() => {
-    toastStore.show("Something went wrong. Please try again.", "error");
-  }, 1000);
-});
-
 const getIconForType = (type: ToastType): "Info" | "Warning" | "Check" => {
   switch (type) {
     case "error":
