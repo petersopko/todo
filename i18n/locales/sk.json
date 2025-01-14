@@ -5,6 +5,9 @@
     "finishedTasks": "Dokončené úlohy",
     "uikit": "UI Kit"
   },
+  "messages": {
+    "taskDeleted": "Úloha bola úspešne odstránená"
+  },
   "dashboard": {
     "greeting": "Ahoj",
     "tasksForToday": "Vaše dnešné úlohy",

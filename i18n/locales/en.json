@@ -5,6 +5,9 @@
     "finishedTasks": "Finished tasks",
     "uikit": "UI Kit"
   },
+  "messages": {
+    "taskDeleted": "Task deleted successfully"
+  },
   "dashboard": {
     "greeting": "Hello",
     "tasksForToday": "Your tasks for today",

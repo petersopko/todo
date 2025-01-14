@@ -81,6 +81,11 @@ export const callApi = async <T>(
       );
     }
 
+    // For DELETE requests or empty responses, return null
+    if (method === "DELETE" || response.headers.get("content-length") === "0") {
+      return null as T;
+    }
+
     const data = await response.json();
 
     if (data.errors) {
