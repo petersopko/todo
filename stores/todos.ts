@@ -215,11 +215,12 @@ export const useTodosStore = defineStore("todos", () => {
       // Optimistic delete
       deletedTodo = items.value.splice(index, 1)[0];
 
-      const response = await $fetch<ApiResponse<void>>(`/api/todos/${id}`, {
+      const response = await $fetch<ApiResponse<null>>(`/api/todos/${id}`, {
         method: "DELETE",
       });
 
-      if ("error" in response) throw response;
+      // DELETE returns null on success, only check for error if response exists
+      if (response && "error" in response) throw response;
 
       toastStore.showSuccess(t("messages.taskDeleted"));
     } catch (e) {

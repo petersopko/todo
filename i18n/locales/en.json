@@ -5,6 +5,9 @@
     "finishedTasks": "Finished tasks",
     "uikit": "UI Kit"
   },
+  "messages": {
+    "taskDeleted": "Task deleted successfully"
+  },
   "dashboard": {
     "greeting": "Hello",
     "tasksForToday": "Your tasks for today",
@@ -27,9 +30,9 @@
     "loading": "Loading..."
   },
   "time": {
-    "morning": "Good morning",
-    "afternoon": "Good afternoon",
-    "evening": "Good evening",
+    "morning": "Good Morning",
+    "afternoon": "Good Afternoon",
+    "evening": "Good Evening",
     "dateFormat": "{day}.{month}.{year}"
   },
   "category": {
