@@ -7,16 +7,43 @@ import { useCategoriesStore } from "~/stores/categories";
 import { useUserStore } from "~/stores/user";
 import { useToastStore } from "~/stores/toast";
 
+type InitializationState =
+  | "uninitialized"
+  | "initializing"
+  | "initialized"
+  | "error";
+
 export const useTodosStore = defineStore("todos", () => {
+  // ==================== State ====================
   const items = ref<Todo[]>([]);
   const isLoading = ref(false);
   const error = ref<string | null>(null);
+  const initState = ref<InitializationState>("uninitialized");
+
+  // Store dependencies
   const categoriesStore = useCategoriesStore();
   const userStore = useUserStore();
   const toastStore = useToastStore();
-  const hasInitialized = ref(false);
-  const isInitializing = ref(false);
   const { t } = useI18n();
+
+  // ==================== Data Normalization ====================
+  const normalizeTodo = (todo: Todo): Todo => {
+    const category = todo.category || {
+      id: "",
+      name: "",
+      color: "",
+      todos: [],
+    };
+
+    return {
+      ...todo,
+      category,
+      is_completed: !!todo.is_completed,
+      date_created: todo.date_created || new Date().toISOString(),
+      date_updated:
+        todo.date_updated || todo.date_created || new Date().toISOString(),
+    };
+  };
 
   const getTranslatedCategoryName = (
     categoryId: string,
@@ -40,6 +67,7 @@ export const useTodosStore = defineStore("todos", () => {
     })),
   );
 
+  // ==================== Filtering & Queries ====================
   const filterTodos = (
     todos: Todo[],
     {
@@ -56,6 +84,7 @@ export const useTodosStore = defineStore("todos", () => {
     });
   };
 
+  // Query methods
   const getTodoById = (id: string) =>
     translatedTodos.value.find((todo) => todo.id === id);
 
@@ -68,6 +97,7 @@ export const useTodosStore = defineStore("todos", () => {
   const getUncompletedTodosByCategory = (categoryId: string) =>
     filterTodos(translatedTodos.value, { categoryId, completed: false });
 
+  // Computed queries
   const completedTodos = computed(() =>
     filterTodos(translatedTodos.value, { completed: true }),
   );
@@ -78,25 +108,25 @@ export const useTodosStore = defineStore("todos", () => {
 
   const recentCompletedTodos = computed(() => completedTodos.value.slice(0, 3));
 
-  const resetState = () => {
-    items.value = [];
-    error.value = null;
-    hasInitialized.value = false;
-  };
-
+  // ==================== Error Handling ====================
   const handleError = (e: unknown, defaultMessage: string) => {
     const result = handleApiError(e, defaultMessage);
     error.value = result.message;
+    initState.value = "error";
     return new Error(result.message);
   };
 
+  // ==================== CRUD Operations ====================
+  const canFetch = computed(
+    () => initState.value === "uninitialized" || initState.value === "error",
+  );
+
+  // Read
   const fetchTodos = async () => {
-    if (hasInitialized.value || isInitializing.value) {
-      return;
-    }
+    if (!canFetch.value) return;
 
     isLoading.value = true;
-    isInitializing.value = true;
+    initState.value = "initializing";
     error.value = null;
 
     try {
@@ -107,60 +137,34 @@ export const useTodosStore = defineStore("todos", () => {
         },
       });
 
-      if ("error" in response) {
-        throw response;
-      }
+      if ("error" in response) throw response;
 
-      items.value = response.data.map((todo) => {
-        const category = todo.category || {
-          id: "",
-          name: "",
-          color: "",
-          todos: [],
-        };
-        return {
-          ...todo,
-          category,
-          is_completed: !!todo.is_completed,
-          date_created: todo.date_created || new Date().toISOString(),
-          date_updated:
-            todo.date_updated || todo.date_created || new Date().toISOString(),
-        };
-      });
-
-      hasInitialized.value = true;
+      items.value = response.data.map(normalizeTodo);
+      initState.value = "initialized";
 
       if (items.value.length > 0 && items.value[0].user_created) {
         userStore.setUser(items.value[0].user_created);
       }
     } catch (e) {
       items.value = [];
-      hasInitialized.value = false;
       throw handleError(e, t("errors.failedToFetchTodos"));
     } finally {
       isLoading.value = false;
-      isInitializing.value = false;
     }
   };
 
+  // Create
   const createTodo = async (text: string, categoryId: string) => {
     try {
       const response = await $fetch<ApiResponse<Todo>>("/api/todos", {
         method: "POST",
-        body: {
-          todo: text,
-          category: categoryId,
-        },
+        body: { todo: text, category: categoryId },
       });
 
-      if ("error" in response) {
-        throw response;
-      }
+      if ("error" in response) throw response;
 
       const category = categoriesStore.getCategoryById(categoryId);
-      if (!category) {
-        throw new Error(t("errors.categoryNotFound"));
-      }
+      if (!category) throw new Error(t("errors.categoryNotFound"));
 
       items.value.push({
         ...response.data,
@@ -176,12 +180,14 @@ export const useTodosStore = defineStore("todos", () => {
     }
   };
 
+  // Update
   const updateTodoStatus = async (id: string, completed: boolean) => {
     let todo: Todo | undefined;
     try {
       todo = items.value.find((t) => t.id === id);
       if (!todo) return;
 
+      // Optimistic update
       todo.is_completed = completed;
 
       const response = await $fetch<ApiResponse<Todo>>(`/api/todos/${id}`, {
@@ -189,17 +195,15 @@ export const useTodosStore = defineStore("todos", () => {
         body: { is_completed: completed },
       });
 
-      if ("error" in response) {
-        throw response;
-      }
+      if ("error" in response) throw response;
     } catch (e) {
-      if (todo) {
-        todo.is_completed = !completed;
-      }
+      // Rollback on error
+      if (todo) todo.is_completed = !completed;
       throw handleError(e, t("errors.failedToUpdateTodo"));
     }
   };
 
+  // Delete
   const deleteTodo = async (id: string) => {
     let deletedTodo: Todo | undefined;
     let index = -1;
@@ -208,50 +212,61 @@ export const useTodosStore = defineStore("todos", () => {
       index = items.value.findIndex((t) => t.id === id);
       if (index === -1) return;
 
+      // Optimistic delete
       deletedTodo = items.value.splice(index, 1)[0];
 
       const response = await $fetch<ApiResponse<void>>(`/api/todos/${id}`, {
         method: "DELETE",
       });
 
-      if ("error" in response) {
-        throw response;
-      }
+      if ("error" in response) throw response;
 
       toastStore.showSuccess(t("messages.taskDeleted"));
     } catch (e) {
-      if (deletedTodo) {
-        items.value.splice(index, 0, deletedTodo);
-      }
+      // Rollback on error
+      if (deletedTodo) items.value.splice(index, 0, deletedTodo);
       throw handleError(e, t("errors.failedToDeleteTodo"));
     }
   };
 
+  // ==================== Utilities ====================
   const reorderTodos = (newOrder: Todo[]) => {
-    if (newOrder.length !== items.value.length) {
-      return;
-    }
+    if (newOrder.length !== items.value.length) return;
 
     const currentIds = new Set(items.value.map((t) => t.id));
     const newIds = new Set(newOrder.map((t) => t.id));
-    if (currentIds.size !== newIds.size) {
-      return;
-    }
+    if (currentIds.size !== newIds.size) return;
 
     items.value = newOrder;
   };
 
-  watch(items, () => {});
+  const resetState = () => {
+    items.value = [];
+    error.value = null;
+    initState.value = "uninitialized";
+    isLoading.value = false;
+  };
 
-  watch(completedTodos, () => {});
+  // Development mode watchers
+  if (import.meta.dev) {
+    watch(items, (newItems) => {
+      console.log("[TodosStore] Items updated:", newItems);
+    });
 
-  watch(recentCompletedTodos, () => {});
+    watch(initState, (newState) => {
+      console.log("[TodosStore] State changed:", newState);
+    });
+  }
 
   return {
+    // State
     items,
     isLoading,
     error,
-    hasInitialized,
+    initState,
+    canFetch,
+
+    // Queries
     getTodoById,
     getTodosByCategory,
     getCompletedTodosByCategory,
@@ -259,10 +274,14 @@ export const useTodosStore = defineStore("todos", () => {
     completedTodos,
     recentCompletedTodos,
     uncompletedTodos,
+
+    // CRUD
     fetchTodos,
     createTodo,
     updateTodoStatus,
     deleteTodo,
+
+    // Utilities
     reorderTodos,
     resetState,
   };
