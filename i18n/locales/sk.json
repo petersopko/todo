@@ -31,7 +31,8 @@
   },
   "common": {
     "error": "Vyskytla sa chyba",
-    "loading": "Načítavam..."
+    "loading": "Načítavam...",
+    "notFound": "Nenájdené"
   },
   "time": {
     "morning": "Dobré ráno",

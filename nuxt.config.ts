@@ -30,7 +30,16 @@ export default defineNuxtConfig({
     lazy: false,
     langDir: "./locales",
     defaultLocale: "en",
-    strategy: "prefix",
+    strategy: "prefix_except_default",
+    customRoutes: "config",
+    pages: {
+      "category/[name]": {
+        sk: "/kategorie/[name]",
+      },
+      finished: {
+        sk: "/dokoncene",
+      },
+    },
   },
   compatibilityDate: "2024-11-01",
   devtools: { enabled: true },

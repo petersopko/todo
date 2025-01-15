@@ -1,7 +1,3 @@
-import { defineStore } from "pinia";
-import { ref, computed } from "vue";
-import { useCategoriesStore } from "./categories";
-
 export const useNewTaskStore = defineStore("newTask", () => {
   const text = ref("");
   const selectedCategoryId = ref("");

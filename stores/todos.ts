@@ -1,5 +1,3 @@
-import { defineStore } from "pinia";
-import { ref, computed, watch } from "vue";
 import type { Todo } from "~/types/api";
 import type { ApiResponse } from "~/utils/errorHandling";
 import { handleApiError } from "~/utils/errorHandling";
@@ -247,17 +245,6 @@ export const useTodosStore = defineStore("todos", () => {
     initState.value = "uninitialized";
     isLoading.value = false;
   };
-
-  // Development mode watchers
-  if (import.meta.dev) {
-    watch(items, (newItems) => {
-      console.log("[TodosStore] Items updated:", newItems);
-    });
-
-    watch(initState, (newState) => {
-      console.log("[TodosStore] State changed:", newState);
-    });
-  }
 
   return {
     // State

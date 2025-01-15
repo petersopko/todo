@@ -1,6 +1,3 @@
-import { defineStore } from "pinia";
-import { ref, computed } from "vue";
-
 interface User {
   first_name: string;
   last_name: string;

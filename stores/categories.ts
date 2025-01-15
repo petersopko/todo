@@ -1,6 +1,3 @@
-import { defineStore } from "pinia";
-import { ref, computed, watch } from "vue";
-import { useI18n } from "vue-i18n";
 import type { Category } from "~/types/api";
 import type { ApiResponse } from "~/utils/errorHandling";
 import { handleApiError } from "~/utils/errorHandling";
@@ -102,21 +99,6 @@ export const useCategoriesStore = defineStore("categories", () => {
     initState.value = "uninitialized";
     isLoading.value = false;
   };
-
-  // Development mode watchers
-  if (import.meta.dev) {
-    watch(items, (newItems) => {
-      console.log("[CategoriesStore] Items updated:", newItems);
-    });
-
-    watch(initState, (newState) => {
-      console.log("[CategoriesStore] State changed:", newState);
-    });
-
-    watch(selectedCategoryId, (newId) => {
-      console.log("[CategoriesStore] Selected category changed:", newId);
-    });
-  }
 
   return {
     // State
