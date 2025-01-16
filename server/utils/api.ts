@@ -6,15 +6,24 @@ interface ApiError {
   message: string;
 }
 
+interface ApiRequest {
+  path: string;
+  method: string;
+  startTime: number;
+  duration?: number;
+}
+
 interface ApiState {
   loading: boolean;
   activeRequests: number;
+  requests: ApiRequest[];
 }
 
 // Global state to track API requests
 const apiState: ApiState = {
   loading: false,
   activeRequests: 0,
+  requests: [],
 };
 
 export const getApiState = () => apiState;
@@ -47,27 +56,38 @@ export const callApi = async <T>(
   } = {},
 ): Promise<T> => {
   const config = useRuntimeConfig(event);
+  const { method = "GET" } = options;
 
-  if (!config.apiBaseUrl || !config.apiAccessToken) {
-    throw createApiError(
-      503,
-      "API configuration is missing. Check environment variables.",
-    );
-  }
-
-  const { method = "GET", body, fields, sort, filter } = options;
-
-  // Build URL with query parameters
-  let url = `${config.apiBaseUrl}/${path}?access_token=${config.apiAccessToken}`;
-  if (fields) url += `&fields=${fields}`;
-  if (sort) url += `&sort=${sort}`;
-  if (filter) {
-    Object.entries(filter).forEach(([key, value]) => {
-      url += `&${key}=${value}`;
-    });
-  }
+  // Start tracking request
+  const request: ApiRequest = {
+    path,
+    method,
+    startTime: Date.now(),
+  };
+  apiState.requests.push(request);
+  apiState.activeRequests++;
+  apiState.loading = true;
 
   try {
+    if (!config.apiBaseUrl || !config.apiAccessToken) {
+      throw createApiError(
+        503,
+        "API configuration is missing. Check environment variables.",
+      );
+    }
+
+    const { body, fields, sort, filter } = options;
+
+    // Build URL with query parameters
+    let url = `${config.apiBaseUrl}/${path}?access_token=${config.apiAccessToken}`;
+    if (fields) url += `&fields=${fields}`;
+    if (sort) url += `&sort=${sort}`;
+    if (filter) {
+      Object.entries(filter).forEach(([key, value]) => {
+        url += `&${key}=${value}`;
+      });
+    }
+
     const response = await fetch(url, {
       method,
       headers: body ? { "Content-Type": "application/json" } : undefined,
@@ -95,5 +115,13 @@ export const callApi = async <T>(
     return data as T;
   } catch (error) {
     throw handleApiError(error);
+  } finally {
+    // Complete request tracking
+    request.duration = Date.now() - request.startTime;
+    apiState.activeRequests--;
+    apiState.loading = apiState.activeRequests > 0;
+
+    // Log request details
+    console.log(`🌐 API ${method} ${path} completed in ${request.duration}ms`);
   }
 };

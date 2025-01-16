@@ -1,6 +1,3 @@
-import { defineStore } from "pinia";
-import { ref } from "vue";
-
 type ToastType = "error" | "success" | "info";
 
 interface Toast {

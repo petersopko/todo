@@ -1,7 +1,3 @@
-import { defineStore } from "pinia";
-import { useI18n } from "vue-i18n";
-import { useRouter, useRoute } from "vue-router";
-
 export const useLanguageStore = defineStore("language", () => {
   const { locale: currentLocale, locales } = useI18n();
   const router = useRouter();
@@ -18,7 +14,8 @@ export const useLanguageStore = defineStore("language", () => {
     const path = route.fullPath.replace(/^\/[^/]+/, "");
 
     currentLocale.value = code;
-    await router.push(`/${code}${path || "/"}`);
+    const newPath = code === "en" ? path || "/" : `/${code}${path || "/"}`;
+    await router.push(newPath);
 
     if (import.meta.client) {
       localStorage.setItem("preferredLocale", code);

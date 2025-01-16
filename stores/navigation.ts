@@ -1,5 +1,3 @@
-import { defineStore } from "pinia";
-
 export const useNavigationStore = defineStore("navigation", () => {
   const isMobileMenuOpen = ref(false);
 

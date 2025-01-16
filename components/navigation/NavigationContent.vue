@@ -20,8 +20,8 @@
 
     <div class="flex flex-col gap-2 pt-4">
       <ClientOnly>
-        <div v-if="isLoading" class="">
-          {{ $t("common.loading") }}
+        <div v-if="isLoading" class="flex justify-center py-4">
+          <Spinner size="md" class-name="text-gray-500" />
         </div>
         <div
           v-else-if="error"
@@ -37,7 +37,7 @@
             variant="tertiary"
             icon="Dot"
             class="w-full flex-nowrap gap-3.5 whitespace-nowrap"
-            @click="selectCategory(category.id)"
+            @click="selectCategory(category)"
           >
             <span class="text-1 truncate">{{ category.name }}</span>
           </Button>
@@ -77,12 +77,13 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { storeToRefs } from "pinia";
-import { useRouter, useRoute } from "vue-router";
 import { useI18n } from "vue-i18n";
 import Button from "~/components/ui/Button.vue";
 import LanguageSwitcher from "~/components/LanguageSwitcher.vue";
 import { useCategoriesStore } from "~/stores/categories";
 import { NavigationSection } from "~/types/api";
+import type { Category } from "~/types/api";
+import { slugify } from "~/utils/url";
 
 interface Props {
   onNavigate?: () => void;
@@ -93,48 +94,74 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const router = useRouter();
-const { locale } = useI18n();
+const { t } = useI18n();
 const categoriesStore = useCategoriesStore();
 const { isLoading, error, translatedCategories } = storeToRefs(categoriesStore);
+
 const selectedSection = ref<NavigationSection>(NavigationSection.DASHBOARD);
 
 const selectSection = (section: NavigationSection) => {
   selectedSection.value = section;
+  const localePath = useLocalePath();
+
   switch (section) {
     case NavigationSection.DASHBOARD:
-      router.push(`/${locale.value}/`);
+      router.push(localePath("/"));
       break;
     case NavigationSection.FINISHED:
-      router.push(`/${locale.value}/finished`);
+      router.push(localePath({ name: "finished" }));
       break;
     case NavigationSection.UI_KIT:
-      router.push(`/${locale.value}/ui-kit`);
+      router.push(localePath("/ui-kit"));
       break;
   }
   props.onNavigate?.();
 };
 
-const selectCategory = (id: string) => {
+const selectCategory = (category: Category) => {
   selectedSection.value = NavigationSection.CATEGORY;
-  categoriesStore.selectCategory(id);
-  router.push(`/${locale.value}/category/${id}`);
+  categoriesStore.selectCategory(category.id);
+
+  // Get the original category from the store to use its untranslated name
+  const originalCategory = categoriesStore.items.find(
+    (c) => c.id === category.id,
+  );
+  if (!originalCategory) return;
+
+  const translatedName = t(`categories.${originalCategory.name.toLowerCase()}`);
+
+  const localePath = useLocalePath();
+  const targetPath = localePath({
+    name: "category-name",
+    params: { name: slugify(translatedName.toLowerCase()) },
+  });
+
+  router.push(targetPath).catch(() => {});
+
   props.onNavigate?.();
 };
 
 onMounted(() => {
   const route = useRoute();
   const path = route.fullPath.replace(/^\/[^/]+/, "");
+  const cleanPath = path.replace(/\/$/, "");
 
-  switch (path) {
+  switch (cleanPath) {
     case "/finished":
+    case "/dokoncene":
       selectedSection.value = NavigationSection.FINISHED;
       break;
-    case "/":
     case "":
       selectedSection.value = NavigationSection.DASHBOARD;
       break;
+    case "/ui-kit":
+      selectedSection.value = NavigationSection.UI_KIT;
+      break;
     default:
-      if (path.startsWith("/category/")) {
+      if (
+        cleanPath.startsWith("/category/") ||
+        cleanPath.startsWith("/kategorie/")
+      ) {
         selectedSection.value = NavigationSection.CATEGORY;
       }
   }
