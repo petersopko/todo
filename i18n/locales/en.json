@@ -54,6 +54,8 @@
     "failedToUpdateTodo": "Failed to update todo status",
     "failedToDeleteTodo": "Failed to delete todo",
     "failedToConnect": "Failed to connect to the server",
-    "failedToCreateTask": "Failed to create task"
+    "failedToCreateTask": "Failed to create task",
+    "pageNotFound": "Page not found",
+    "backToHome": "Back to home"
   }
 }

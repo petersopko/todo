@@ -55,6 +55,8 @@
     "failedToUpdateTodo": "Nepodarilo sa aktualizovať stav úlohy",
     "failedToDeleteTodo": "Nepodarilo sa odstrániť úlohu",
     "failedToConnect": "Nepodarilo sa pripojiť k serveru",
-    "failedToCreateTask": "Nepodarilo sa vytvoriť úlohu"
+    "failedToCreateTask": "Nepodarilo sa vytvoriť úlohu",
+    "pageNotFound": "Stránka nebola nájdená",
+    "backToHome": "Späť na hlavnú stránku"
   }
 }

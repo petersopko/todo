@@ -20,8 +20,8 @@
 
     <div class="flex flex-col gap-2 pt-4">
       <ClientOnly>
-        <div v-if="isLoading" class="">
-          {{ $t("common.loading") }}
+        <div v-if="isLoading" class="flex justify-center py-4">
+          <Spinner size="md" class-name="text-gray-500" />
         </div>
         <div
           v-else-if="error"
@@ -97,6 +97,7 @@ const router = useRouter();
 const { t } = useI18n();
 const categoriesStore = useCategoriesStore();
 const { isLoading, error, translatedCategories } = storeToRefs(categoriesStore);
+
 const selectedSection = ref<NavigationSection>(NavigationSection.DASHBOARD);
 
 const selectSection = (section: NavigationSection) => {
